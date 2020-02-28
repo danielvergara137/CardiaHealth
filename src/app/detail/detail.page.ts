@@ -109,11 +109,15 @@ export class DetailPage implements OnInit {
             },
             scales: {
               yAxes: [{
+                gridLines: {
+                  color: colorline,
+                  zeroLineColor: colorline
+                },
                 ticks: {
                   display: false,
                   min: 0,
                   max: 4000,
-                  fontColor: "black",
+                  fontColor: colorline,
                   beginAtZero: true
                 }
               }],
