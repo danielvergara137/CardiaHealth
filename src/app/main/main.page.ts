@@ -37,6 +37,7 @@ export class MainPage implements OnInit {
   ionViewWillEnter() {
   }
 
+  //Cuando se entra a la pagina se verifican los permisos necesarios para el plugin de BLE y se inicia el scan
   ionViewDidEnter() {
     console.log('ionViewDidEnter');
     this.permissionService.checkBluetooth();
@@ -44,6 +45,7 @@ export class MainPage implements OnInit {
     this.scan();
   }
 
+  //Se actualiza el estado mostrado en el footer, se muestra un indicador de progreso y se inicia el scan
   scan() {
     this.setStatus('Buscando dispositivos');
     this.devices = []; 
@@ -56,6 +58,7 @@ export class MainPage implements OnInit {
     setTimeout(this.setStatus.bind(this), 2000, 'Escaneo completado');
   }
 
+  //Utilizado para mostrar el indicador de progreso del scan
   async presentLoading() {
     const loading = await this.loadingController.create({
       message: 'Buscando dispositivos',
@@ -68,6 +71,7 @@ export class MainPage implements OnInit {
     console.log('Loading dismissed!');
   }
 
+  //Cuando se descubre un dispositivo, este se agrega al array devices para mostrarlo en pantalla
   onDeviceDiscovered(device) {
     console.log('Discovered ' + JSON.stringify(device, null, 2));
     this.ngZone.run(() => {
@@ -86,6 +90,7 @@ export class MainPage implements OnInit {
     toast.present();
   }
 
+  //Se actualiza el mensaje del footer
   setStatus(message) {
     console.log(message);
     this.ngZone.run(() => {
@@ -93,6 +98,7 @@ export class MainPage implements OnInit {
     });
   }
   
+  //Cuando se selecciona un dispositivo se abre su pagina de detalle y se envian sus parametros
   deviceSelected(name: string, id: string) {
     console.log(JSON.stringify(name) + ' selected');
     let navextras = {

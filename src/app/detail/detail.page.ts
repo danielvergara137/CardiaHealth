@@ -20,6 +20,7 @@ export class DetailPage implements OnInit {
   buffer: number[] = new Array(200);
   data: number[] = new Array();
   enviando: boolean = false;
+  recibiendodatos: boolean = false;
   //@ViewChild('canvas', { static: false }) canvasEl : ElementRef;
  // private _CANVAS  : any;
   //private _CONTEXT : any;
@@ -51,6 +52,7 @@ export class DetailPage implements OnInit {
     this.estado = "";
   }
 
+  //Inicia la conexión al dispositivo y fija los parámetros del gráfico del ECG
   ngOnInit() {
     this.connect(this.device.id);
     let colorline = '';
@@ -134,6 +136,7 @@ export class DetailPage implements OnInit {
     
   }
 
+  //Conecta la app al dispositivo mediante bluetooth
   connect(id: string){
     console.log('conectando')
     this.presentLoading('Conectando', 1500);
@@ -143,6 +146,7 @@ export class DetailPage implements OnInit {
     );
     console.log('conexion terminada')
   }
+
 
   errorConnect(message, id){
     console.log(message);
@@ -185,6 +189,7 @@ export class DetailPage implements OnInit {
     this._CONTEXT.moveTo(0, this._CANVAS.height/2);
   }*/
 
+  //Dibuja el gráfico luego de agregar el último dato recibido
   drawChart(data){
     this.ngZone.run(() => {
       var ejey = String.fromCharCode.apply(null, Array.from(new Uint8Array(data)));
@@ -250,6 +255,7 @@ export class DetailPage implements OnInit {
     }
   }*/
 
+  //Si la conexión tiene exito se fija el status del footer
   onConnected(peripheral) {
     this.ngZone.run(() => {
       this.setStatus('Dispositivo conectado');
@@ -258,6 +264,7 @@ export class DetailPage implements OnInit {
     });
   }
 
+  //Caundo el dispositivo de desconecta, se actualiza el estado y se muestra un mensaje
   async onDeviceDisconnected(peripheral) {
     console.log('no conectado')
     this.setStatus('Dispositivo desconectado');
@@ -265,6 +272,7 @@ export class DetailPage implements OnInit {
     this.toastMessage('Periferico desconectado', 2000, 'middle')
   }
 
+  //Muestra con mensaje en pantalla mediante el ToastController
   async toastMessage(message, duration, position){
     const toast = await this.toastCtrl.create({
       message: message,
@@ -274,6 +282,7 @@ export class DetailPage implements OnInit {
     toast.present();
   }
 
+  //Si el dispositivo está conectado de actualiza el mensaje del footer, si no se conecta 
   reconect(){
     console.log('reconectando') 
     this.ble.isConnected(this.device['id']).then(
@@ -282,6 +291,7 @@ export class DetailPage implements OnInit {
     );
   }
 
+  //Utilizado para mostrar un indicador de progreso en pantalla
   async presentLoading(mensaje, duracion) {
     const loading = await this.loadingController.create({
       message: mensaje,
@@ -294,7 +304,7 @@ export class DetailPage implements OnInit {
     console.log('Loading dismissed!');
   }
 
-  // Disconnect peripheral when leaving the page
+  // Desconecta el dispositivo cuando se abandona la pagina
   ionViewWillLeave() {
     console.log('ionViewWillLeave disconnecting Bluetooth');
     this.ble.disconnect(this.peripheral.id).then(
@@ -303,6 +313,7 @@ export class DetailPage implements OnInit {
     )
   }
 
+  //Actualiza el mensaje del footer
   setStatus(message: string) {
     console.log(message);
     this.ngZone.run(() => {
@@ -310,12 +321,13 @@ export class DetailPage implements OnInit {
     });
   }
 
+  //Inicia las notificaciones para la caracteristica seleccionada
   notificar(device, service_uuid, characteristic_uuid){
     if(characteristic_uuid == '6e400003-b5a3-f393-e0a9-e50e24dcca9e'){
       this.ble.startNotification(device, service_uuid, characteristic_uuid).subscribe(
         dato => {
           this.drawChart(dato);
-          //this.drawBuffer(dato);
+          this.recibiendodatos = true;
         }
       );
     }
@@ -326,6 +338,7 @@ export class DetailPage implements OnInit {
     }
   }
 
+  //Actualiza el valor mostrado en pantalla del estado del paciente
   mostrarestado(data){
     var estado = String.fromCharCode.apply(null, Array.from(new Uint8Array(data)));
     this.ngZone.run(() => {
@@ -333,12 +346,17 @@ export class DetailPage implements OnInit {
     });
   }
 
+  //Verifica que se estén recibiendo datos del dispositivo y empieza a recopilarlos
   prepararenvio(){
-    this.enviando = true;
-    this.presentLoading('Recopilando datos', 31000);
-    setTimeout(this.enviar.bind(this), 31000);
+    if(this.recibiendodatos){
+      this.enviando = true;
+      this.presentLoading('Recopilando datos', 31000);
+      setTimeout(this.enviar.bind(this), 31000);
+    }
+    else this.toastMessage('Active Ver señal de ECG antes de enviar', 2000, 'middle');
   }
 
+  //Envia los datos recopilados a la plataforma web y luego a AWS S3
   enviar(){
     this.presentLoading('Enviando datos', 20000);
     let stringtowrite: string = "";
@@ -363,12 +381,12 @@ export class DetailPage implements OnInit {
         this.awsProvider.uploadtoS3(newName, 'text/plain', {'content' : stringtowrite}).subscribe(
           resp => { console.log('archivo enviado');
                     this.loadingController.dismiss();
-                    this.toastMessage('Datos enviados', 1500, 'bottom')
+                    this.toastMessage('Datos enviados', 1500, 'middle')
                   },
-          error => this.toastMessage('Error al enviar los datos', 2000, 'bottom')
+          error => this.toastMessage('Error al enviar los datos', 2000, 'middle')
         );
       },
-      (error) => this.toastMessage('Error al enviar los datos', 2000, 'bottom')
+      (error) => this.toastMessage('Error al enviar los datos', 2000, 'middle')
     );
   }
 
