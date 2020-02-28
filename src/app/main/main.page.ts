@@ -79,7 +79,7 @@ export class MainPage implements OnInit {
     });
   }
 
-  // If location permission is denied, you'll end up here
+  //Si no existen los permisos para el uso del bluetooth se muestra un error
   async scanError(error) {
     this.setStatus('Error ' + error);
     const toast = await this.toastCtrl.create({
