@@ -1,0 +1,28 @@
+<ion-header>
+  <ion-toolbar color=primary>
+    <ion-buttons slot="start">
+      <ion-menu-button autoHide="false"></ion-menu-button>
+    </ion-buttons>
+    <ion-title>Settings</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-list>
+  
+    <ion-item>
+      <ion-label>Idioma</ion-label>
+      <ion-select placeholder="Select One">
+        <ion-select-option value="s">Español</ion-select-option>
+        <ion-select-option value="e">Inglés</ion-select-option>
+      </ion-select>
+    </ion-item>
+
+    <ion-item>
+      <ion-label>Modo oscuro</ion-label>
+      <ion-toggle #toggleElement checked={{checked}} (ionChange)="changeTheme($event.detail)"></ion-toggle>
+    </ion-item>
+  
+  </ion-list>
+
+</ion-content>

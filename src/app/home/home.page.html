@@ -1,0 +1,21 @@
+<ion-header>
+</ion-header>
+
+<ion-content padding>
+  <ion-img src="../../assets/Cardiahealth2.png"></ion-img>
+  <ion-label>
+    <h1 align="center">   </h1>
+  </ion-label>
+  <form #form="ngForm" (ngSubmit)="login(form)" method="post">
+    <ion-item>
+      <ion-label position="floating">Username </ion-label>
+      <ion-input ngModel required id="username" name="username" type="text"></ion-input>
+    </ion-item>
+    <ion-item>
+      <ion-label position="floating">Password </ion-label>
+      <ion-input ngModel required id="password" name="password" type="password"></ion-input>
+    </ion-item>
+
+    <ion-button type="submit" color="primary" expand="block">Login</ion-button>
+  </form>
+</ion-content>

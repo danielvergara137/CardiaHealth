@@ -1,0 +1,69 @@
+<ion-header>
+  <ion-toolbar color=primary>
+    <ion-buttons slot="start">
+      <ion-menu-button autoHide="false"></ion-menu-button>
+    </ion-buttons>
+    <ion-buttons slot="end">
+      <ion-button (click)="reconect()">Reconectar</ion-button>
+    </ion-buttons>
+    <ion-title>{{ peripheral.name || 'Device' }}</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-card>
+    <ion-card-header>
+      {{ peripheral.name || 'Unnamed' }}
+    </ion-card-header>
+    <ion-card-content>
+      MAC: {{ peripheral.id }}
+    </ion-card-content>
+  </ion-card>
+
+  <ion-card>
+    <ion-card-header>
+      Servicios disponibles
+    </ion-card-header>
+    <ion-list> 
+      <ng-container *ngFor="let charact of peripheral.characteristics">
+        <ion-item *ngIf="charact.properties=='Notify'" (click)="notificar(peripheral.id, charact.service, charact.characteristic)">
+          <ng-container *ngIf="charact.characteristic=='6e400003-b5a3-f393-e0a9-e50e24dcca9e'">
+            <ion-label >
+              <h2>Ver señal de ECG</h2>
+            </ion-label> 
+            <ion-icon slot="start" name="pulse"></ion-icon>
+          </ng-container>
+          <ng-container *ngIf="charact.characteristic=='82907e6e-90ce-4695-ba9b-1d4e460ee136'">
+            <ion-label >
+              <h2>Ver estado</h2>
+            </ion-label> 
+            <ion-icon slot="start" name="body"></ion-icon>
+            <ion-label >
+              <h2>{{ estado }}</h2>
+            </ion-label> 
+          </ng-container>
+        </ion-item>
+      </ng-container>
+    </ion-list>
+  </ion-card>
+<!---
+  <div class="ion-canvas" align="center">
+    <canvas #canvas align="center"></canvas>
+  </div>-->
+  
+  <ion-card>
+    <canvas id="realtime">{{ chart }}</canvas>
+  </ion-card>
+  
+</ion-content>
+
+<ion-footer>
+  <ion-toolbar>
+    <p>{{ statusMessage }}</p>
+    <ion-buttons slot="end">
+      <ion-button (click)="prepararenvio()">Enviar
+        <ion-icon name="cloud-upload"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-footer>
