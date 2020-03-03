@@ -199,9 +199,7 @@ export class DetailPage implements OnInit {
   drawChart(data){
     this.ngZone.run(() => {
       var ejey = String.fromCharCode.apply(null, Array.from(new Uint8Array(data)));
-      //if(this.chart.data.datasets[0].data.length == 200){
       this.chart.data.datasets[0].data.shift();
-      //}
       this.chart.data.datasets[0].data.push(ejey);
       this.chart.update()
       if( this.enviando && this.data.length < 3000){
@@ -389,8 +387,8 @@ export class DetailPage implements OnInit {
     }
 
     this.enviando = false;
-    this.data =[] ;
-
+    this.data = [] ;
+/*
     this.awsProvider.uploadtoplatform(' ', 1, this.peripheral.id).subscribe( 
       (resp) => {
         console.log(resp)
@@ -408,7 +406,7 @@ export class DetailPage implements OnInit {
         );
       },
       (error) => this.toastMessage('Error al enviar los datos', 2000, 'middle')
-    );
+    );*/
   }
 
 }
