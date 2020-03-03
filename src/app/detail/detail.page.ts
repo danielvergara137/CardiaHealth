@@ -391,9 +391,6 @@ export class DetailPage implements OnInit {
     this.enviando = false;
     this.data =[] ;
 
-    this.loadingController.dismiss();
-    this.toastMessage('Datos enviados', 1500, 'middle')
-
     this.awsProvider.uploadtoplatform(' ', 1, this.peripheral.id).subscribe( 
       (resp) => {
         console.log(resp)
