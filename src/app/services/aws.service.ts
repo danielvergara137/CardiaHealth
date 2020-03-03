@@ -6,7 +6,7 @@ import { map } from 'rxjs/operators';
   providedIn: 'root'
 })
 export class AwsService {
-  apiUrl = 'https://nameless-lowlands-46770.herokuapp.com/';
+  apiUrl = 'https://cardiahealth-server.herokuapp.com/';
   apiPlatform ='http://footshotcloud.cl:3000/api/device/cardialysExam';
 
   constructor( public http: HttpClient ) {}

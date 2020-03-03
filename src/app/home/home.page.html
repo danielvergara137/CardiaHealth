@@ -15,7 +15,9 @@
       <ion-label position="floating">Password </ion-label>
       <ion-input ngModel required id="password" name="password" type="password"></ion-input>
     </ion-item>
-
     <ion-button type="submit" color="primary" expand="block">Login</ion-button>
   </form>
+  <ion-label color="danger" align="center">
+    <p>{{ alert }}</p>
+  </ion-label>
 </ion-content>

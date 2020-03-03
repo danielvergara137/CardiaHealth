@@ -17,6 +17,7 @@ export class DetailPage implements OnInit {
   peripheral: any = {};
   statusMessage: string;
   estado: string;
+  temp: string;
   buffer: number[] = new Array(200);
   data: number[] = new Array();
   enviando: boolean = false;
@@ -111,6 +112,7 @@ export class DetailPage implements OnInit {
               yAxes: [{
                 gridLines: {
                   color: colorline,
+                  lineWidth: 0.5,
                   zeroLineColor: colorline
                 },
                 ticks: {
@@ -340,6 +342,11 @@ export class DetailPage implements OnInit {
         dato => this.mostrarestado(dato)
       );
     }
+    else if(characteristic_uuid == 'd6a8b9c2-be5a-48e8-a77c-c6fbbaf5fd9b'){
+      this.ble.startNotification(device, service_uuid, characteristic_uuid).subscribe(
+        dato => this.mostrartemp(dato)
+      );
+    }
   }
 
   //Actualiza el valor mostrado en pantalla del estado del paciente
@@ -347,6 +354,13 @@ export class DetailPage implements OnInit {
     var estado = String.fromCharCode.apply(null, Array.from(new Uint8Array(data)));
     this.ngZone.run(() => {
       this.estado = estado;
+    });
+  }
+
+  mostrartemp(data){
+    var temp = String.fromCharCode.apply(null, Array.from(new Uint8Array(data)));
+    this.ngZone.run(() => {
+      this.temp = temp + '°';
     });
   }
 
@@ -360,19 +374,25 @@ export class DetailPage implements OnInit {
     else this.toastMessage('Active Ver señal de ECG antes de enviar', 2000, 'middle');
   }
 
-  //Envia los datos recopilados a la plataforma web y luego a AWS S3
+  //Registra el examen en la plataforma web y luego envia los datos del ECG a AWS S3
   enviar(){
     this.presentLoading('Enviando datos', 20000);
     let stringtowrite: string = "";
 
     console.log(this.data)
 
-    for(var i = 0; i < this.data.length; i++){
-      stringtowrite += this.data[i].toString() + '\n';
+    let len = this.data.length;
+
+    for(var i = 0; i < len; i++){
+      stringtowrite += this.data[i].toString();
+      if (i < len - 1 ) stringtowrite += '\n';
     }
 
     this.enviando = false;
     this.data =[] ;
+
+    this.loadingController.dismiss();
+    this.toastMessage('Datos enviados', 1500, 'middle')
 
     this.awsProvider.uploadtoplatform(' ', 1, this.peripheral.id).subscribe( 
       (resp) => {

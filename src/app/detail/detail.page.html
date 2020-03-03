@@ -42,6 +42,15 @@
               <h2>{{ estado }}</h2>
             </ion-label> 
           </ng-container>
+          <ng-container *ngIf="charact.characteristic=='d6a8b9c2-be5a-48e8-a77c-c6fbbaf5fd9b'">
+            <ion-label >
+              <h2>Ver temperatura</h2>
+            </ion-label> 
+            <ion-icon slot="start" name="thermometer"></ion-icon>
+            <ion-label >
+              <h2> {{ temp }} </h2>
+            </ion-label> 
+          </ng-container>
         </ion-item>
       </ng-container>
     </ion-list>
