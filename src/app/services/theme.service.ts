@@ -14,7 +14,10 @@ export class ThemeService {
     ) {
     storage.getItem('theme').then(themename => {
       this.setGlobalCSS(themename);
-    });
+    },
+    error => {
+      this.setGlobalCSS('light');
+      this.setTheme(' ')});
   }
 
   setTheme(theme) {
@@ -23,6 +26,7 @@ export class ThemeService {
 
   private setGlobalCSS(theme: string) {
     if(theme == 'dark') document.body.classList.toggle('dark', true);
+    else document.body.classList.toggle('light', true);
   }
 
   storedThemename(){

@@ -75,7 +75,8 @@ export class MainPage implements OnInit {
   onDeviceDiscovered(device) {
     console.log('Discovered ' + JSON.stringify(device, null, 2));
     this.ngZone.run(() => {
-      if(device.name != null) this.devices.push(device);
+      //if(device.name != null) 
+      this.devices.push(device);
     });
   }
 

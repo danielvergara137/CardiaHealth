@@ -55,7 +55,6 @@ export class DetailPage implements OnInit {
 
   //Inicia la conexión al dispositivo y fija los parámetros del gráfico del ECG
   ngOnInit() {
-    this.connect(this.device.id);
     let colorline = '';
     this.theme.storedThemename().then(
       resp => {
@@ -137,9 +136,11 @@ export class DetailPage implements OnInit {
             }
           }
         });
-      }
+      },
+      error => console.log('error grafica ' + error)
     )
-    
+
+    this.connect(this.device.id);
   }
 
   //Conecta la app al dispositivo mediante bluetooth
@@ -148,7 +149,7 @@ export class DetailPage implements OnInit {
     this.presentLoading('Conectando', 1500);
     this.ble.connect(id).subscribe(
       peripheral => this.onConnected(peripheral),
-      peripheral => this.onDeviceDisconnected(peripheral)
+      error => this.onDeviceDisconnected(error)
     );
     console.log('conexion terminada')
   }
@@ -374,7 +375,7 @@ export class DetailPage implements OnInit {
 
   //Registra el examen en la plataforma web y luego envia los datos del ECG a AWS S3
   enviar(){
-    this.presentLoading('Enviando datos', 20000);
+    this.presentLoading('Enviando datos', 10000);
     let stringtowrite: string = "";
 
     console.log(this.data)

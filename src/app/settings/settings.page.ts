@@ -22,7 +22,8 @@ export class SettingsPage implements OnInit {
 
   ngOnInit() {
     this.storage.getItem('theme').then(
-      themename => this.checkToggle(themename)
+      themename => this.checkToggle(themename),
+      error => console.log('no theme ' +  error)
     );
   }
 
