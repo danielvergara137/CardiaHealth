@@ -136,18 +136,22 @@ export class DetailPage implements OnInit {
       },
       error => console.log('error grafica ' + error)
     )
+    this.preconnect(this.device.id);
+  }
 
-    this.connect(this.device.id);
+  preconnect(id: string){
+    this.presentLoading('Conectando', 2000);
+    this.ble.scan([], 1)
+    setTimeout(this.connect.bind(this), 1000, this.device.id);
   }
 
   //Conecta la app al dispositivo mediante bluetooth
   connect(id: string){
     console.log('conectando')
-    this.presentLoading('Conectando', 1500);
     this.ble.connect(id).subscribe(
       peripheral => this.onConnected(peripheral),
       error => this.onDeviceDisconnected(error)
-    );
+    )
     console.log('conexion terminada')
   }
 
@@ -208,7 +212,7 @@ export class DetailPage implements OnInit {
     console.log('reconectando') 
     this.ble.isConnected(this.device['id']).then(
       () => this.setStatus('Dispositivo conectado'),
-      () => this.connect(this.device['id'])
+      () => this.preconnect(this.device['id'])
     );
   }
 
@@ -309,7 +313,7 @@ export class DetailPage implements OnInit {
 
     this.enviando = false;
     this.data = [] ;
-/*
+
     this.awsProvider.uploadtoplatform(' ', 1, this.peripheral.id).subscribe( 
       (resp) => {
         console.log(resp)
@@ -327,7 +331,7 @@ export class DetailPage implements OnInit {
         );
       },
       (error) => this.toastMessage('Error al enviar los datos', 2000, 'middle')
-    );*/
+    );
   }
 
 }
