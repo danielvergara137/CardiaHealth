@@ -22,9 +22,6 @@ export class DetailPage implements OnInit {
   data: number[] = new Array();
   enviando: boolean = false;
   recibiendodatos: boolean = false;
-  //@ViewChild('canvas', { static: false }) canvasEl : ElementRef;
- // private _CANVAS  : any;
-  //private _CONTEXT : any;
   private device : any;
   private ejex : any;
   public chart: any = null;
@@ -163,38 +160,6 @@ export class DetailPage implements OnInit {
       () => console.log('ERROR disconnecting ' + JSON.stringify(this.device['name']))
     )
   }
-/*
-  ionViewDidEnter(){
-    this._CANVAS 	    = this.canvasEl.nativeElement;
-    this._CANVAS.width  	= 400;
-    this._CANVAS.height 	= 200;
-
-    this.initialiseCanvas();
-    this.draw();
-  }
-
-  initialiseCanvas(){
-    if(this._CANVAS.getContext){
-      this.setupCanvas();
-    }
-  }
-
-  setupCanvas(){
-    this._CONTEXT = this._CANVAS.getContext('2d');
-    this._CONTEXT.fillStyle = "#c0c0c0";
-    this._CONTEXT.fillRect(0, 0, 400, 200);
-  }
-
-  clearCanvas(){
-    this._CONTEXT.clearRect(0, 0, this._CANVAS.width, this._CANVAS.height);
-    this.setupCanvas();
-  }
-
-  draw(){
-    this.clearCanvas();
-    this._CONTEXT.beginPath();
-    this._CONTEXT.moveTo(0, this._CANVAS.height/2);
-  }*/
 
   //Dibuja el gráfico luego de agregar el último dato recibido
   drawChart(data){
@@ -210,55 +175,6 @@ export class DetailPage implements OnInit {
       }
     });
   }
-/*
-  drawBuffer(data){
-    this.draw();
-    var ejey = String.fromCharCode.apply(null, Array.from(new Uint8Array(data)));
-    this.buffer.shift();
-    this.buffer.push(ejey);
-    if( this.enviando && this.data.length < 3000){
-      this.data.push(ejey);
-      console.log("data push: " + ejey)
-      console.log("tam data: " + this.data.length)
-    }
-    this.ejex = 0;
-    for(var i=0; i < this.buffer.length; i++){
-      var y = this._CANVAS.height - this.buffer[i]/20;
-      this._CONTEXT.lineTo(this.ejex, y);
-      this._CONTEXT.lineWidth = 0.5;
-      this._CONTEXT.strokeStyle = '#000000';
-      this.ejex += 2;
-    }
-    this._CONTEXT.stroke();
-  }
-
-  drawLine(data){    
-    //this.mostrar(buffer);
-    //console.log(buffer)
-    var ejey = String.fromCharCode.apply(null, Array.from(new Uint8Array(data)));
-    //console.log("x: " + this.ejex + " width: " + this._CANVAS.width)
-    if( this.enviando && this.data.length < 3000){
-      this.data.push(ejey);
-      console.log("data push: " + ejey)
-      console.log("tam data: " + this.data.length)
-    }
-    if(this.ejex < this._CANVAS.width){
-      this.buffer.push(ejey);
-      var y = this._CANVAS.height - ejey/20;
-      this._CONTEXT.lineTo(this.ejex, y);
-      this._CONTEXT.lineWidth = 0.1;
-      this._CONTEXT.strokeStyle = '#000000';
-      this._CONTEXT.stroke();
-      this.ejex += 2;
-      //console.log("x: " + this.ejex + " y: " + y)
-    }
-    else if(this.ejex >= this._CANVAS.width){
-      this.buffer = []
-      this.buffer.push(ejey);
-      this.draw();
-      this.ejex = 0;
-    }
-  }*/
 
   //Si la conexión tiene exito se fija el status del footer
   onConnected(peripheral) {
@@ -337,13 +253,15 @@ export class DetailPage implements OnInit {
       );
     }
     else if(characteristic_uuid == '82907e6e-90ce-4695-ba9b-1d4e460ee136'){
+      console.log('notif estado')
       this.ble.startNotification(device, service_uuid, characteristic_uuid).subscribe(
         dato => this.mostrarestado(dato)
       );
     }
     else if(characteristic_uuid == 'd6a8b9c2-be5a-48e8-a77c-c6fbbaf5fd9b'){
+      console.log('notif temp')
       this.ble.startNotification(device, service_uuid, characteristic_uuid).subscribe(
-        dato => this.mostrartemp(dato)
+        dato =>  this.mostrartemp(dato)
       );
     }
   }
@@ -351,6 +269,7 @@ export class DetailPage implements OnInit {
   //Actualiza el valor mostrado en pantalla del estado del paciente
   mostrarestado(data){
     var estado = String.fromCharCode.apply(null, Array.from(new Uint8Array(data)));
+    console.log("recibido estado: " + estado)
     this.ngZone.run(() => {
       this.estado = estado;
     });
@@ -358,6 +277,7 @@ export class DetailPage implements OnInit {
 
   mostrartemp(data){
     var temp = String.fromCharCode.apply(null, Array.from(new Uint8Array(data)));
+    console.log('recibido temp: ' + temp)
     this.ngZone.run(() => {
       this.temp = temp + '°';
     });
