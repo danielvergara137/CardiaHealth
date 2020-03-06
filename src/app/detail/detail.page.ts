@@ -140,9 +140,24 @@ export class DetailPage implements OnInit {
   }
 
   preconnect(id: string){
-    this.presentLoading('Conectando', 2000);
-    this.ble.scan([], 1)
-    setTimeout(this.connect.bind(this), 1000, this.device.id);
+    this.presentLoading('Conectando', 2500);
+    this.ble.scan([], 2).subscribe(
+      peripheral => {
+        console.log(JSON.stringify(peripheral))
+        if (peripheral.id == id) this.connect(id)
+      }
+    )
+    //setTimeout(this.connect.bind(this), 1000, id);
+  }
+
+  preconnecttwo(id:string){
+    this.presentLoading('Conectando', 2500);
+    this.ble.scan([], 2).subscribe(
+      peripheral => {
+        console.log(JSON.stringify(peripheral, null, 2))
+      }
+    );
+    setTimeout(this.connect.bind(this), 2000, id);
   }
 
   //Conecta la app al dispositivo mediante bluetooth
@@ -152,7 +167,6 @@ export class DetailPage implements OnInit {
       peripheral => this.onConnected(peripheral),
       error => this.onDeviceDisconnected(error)
     )
-    console.log('conexion terminada')
   }
 
 
