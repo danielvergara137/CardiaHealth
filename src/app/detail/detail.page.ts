@@ -263,7 +263,7 @@ export class DetailPage implements OnInit {
 
   //Inicia las notificaciones para la caracteristica seleccionada
   notificar(device, service_uuid, characteristic_uuid){
-    if(characteristic_uuid == '6e400003-b5a3-f393-e0a9-e50e24dcca9e'){
+    if(characteristic_uuid == '6e400003-b5a3-f393-e0a9-e50e24dcca9e' || characteristic_uuid == '6E400003-B5A3-F393-E0A9-E50E24DCCA9E'){
       this.ble.startNotification(device, service_uuid, characteristic_uuid).subscribe(
         dato => {
           this.drawChart(dato);
@@ -271,13 +271,13 @@ export class DetailPage implements OnInit {
         }
       );
     }
-    else if(characteristic_uuid == '82907e6e-90ce-4695-ba9b-1d4e460ee136'){
+    else if(characteristic_uuid == '82907e6e-90ce-4695-ba9b-1d4e460ee136' || characteristic_uuid == '82907E6E-90CE-4695-BA9B-1D4E460EE136'){
       console.log('notif estado')
       this.ble.startNotification(device, service_uuid, characteristic_uuid).subscribe(
         dato => this.mostrarestado(dato)
       );
     }
-    else if(characteristic_uuid == 'd6a8b9c2-be5a-48e8-a77c-c6fbbaf5fd9b'){
+    else if(characteristic_uuid == 'd6a8b9c2-be5a-48e8-a77c-c6fbbaf5fd9b' || characteristic_uuid == 'D6A8B9C2-BE5A-48E8-A77C-C6FBBAF5FD9B'){
       console.log('notif temp')
       this.ble.startNotification(device, service_uuid, characteristic_uuid).subscribe(
         dato =>  this.mostrartemp(dato)
