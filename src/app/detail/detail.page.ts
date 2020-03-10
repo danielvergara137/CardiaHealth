@@ -280,7 +280,7 @@ export class DetailPage implements OnInit {
     else if(characteristic_uuid == 'd6a8b9c2-be5a-48e8-a77c-c6fbbaf5fd9b' || characteristic_uuid == 'D6A8B9C2-BE5A-48E8-A77C-C6FBBAF5FD9B'){
       console.log('notif temp')
       this.ble.startNotification(device, service_uuid, characteristic_uuid).subscribe(
-        dato =>  this.mostrartemp(dato)
+        dato => this.mostrartemp(dato)
       );
     }
   }
@@ -288,17 +288,18 @@ export class DetailPage implements OnInit {
   //Actualiza el valor mostrado en pantalla del estado del paciente
   mostrarestado(data){
     var estado = String.fromCharCode.apply(null, Array.from(new Uint8Array(data)));
-    console.log("recibido estado: " + estado)
+    //console.log("recibido estado: " + estado)
     this.ngZone.run(() => {
       this.estado = estado;
     });
   }
 
+  //Actualiza el valor mostrado en pantalla de la temperatura del paciente
   mostrartemp(data){
     var temp = String.fromCharCode.apply(null, Array.from(new Uint8Array(data)));
     console.log('recibido temp: ' + temp)
     this.ngZone.run(() => {
-      this.temp = temp + '°';
+      this.temp = temp + '°C';
     });
   }
 
