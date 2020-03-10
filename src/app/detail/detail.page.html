@@ -26,14 +26,19 @@
     </ion-card-header>
     <ion-list> 
       <ng-container *ngFor="let charact of peripheral.characteristics">
+        <ion-label>
+          <p> {{ charact.service }} </p>
+          <p> {{ charact.characteristic }} </p>
+          <p> {{ charact.properties }} </p>
+        </ion-label>
         <ion-item *ngIf="charact.properties=='Notify'" (click)="notificar(peripheral.id, charact.service, charact.characteristic)">
-          <ng-container *ngIf="charact.characteristic=='6e400003-b5a3-f393-e0a9-e50e24dcca9e'">
+          <ng-container *ngIf="charact.characteristic=='6e400003-b5a3-f393-e0a9-e50e24dcca9e' || charact.characteristic=='6E400003-B5A3-F393-E0A9-E50E24DCCA9E'">
             <ion-label >
               <h2>Ver señal de ECG</h2>
             </ion-label> 
             <ion-icon slot="start" name="pulse"></ion-icon>
           </ng-container>
-          <ng-container *ngIf="charact.characteristic=='82907e6e-90ce-4695-ba9b-1d4e460ee136'">
+          <ng-container *ngIf="charact.characteristic=='82907e6e-90ce-4695-ba9b-1d4e460ee136' || charact.characteristic=='82907E6E-90CE-4695-BA9B-1D4E460EE136'">
             <ion-label >
               <h2>Ver estado</h2>
             </ion-label> 
@@ -42,7 +47,7 @@
               <h2>{{ estado }}</h2>
             </ion-label> 
           </ng-container>
-          <ng-container *ngIf="charact.characteristic=='d6a8b9c2-be5a-48e8-a77c-c6fbbaf5fd9b'">
+          <ng-container *ngIf="charact.characteristic=='d6a8b9c2-be5a-48e8-a77c-c6fbbaf5fd9b' || charact.characteristic=='D6A8B9C2-BE5A-48E8-A77C-C6FBBAF5FD9B'">
             <ion-label >
               <h2>Ver temperatura</h2>
             </ion-label> 
