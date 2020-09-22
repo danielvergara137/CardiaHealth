@@ -110,4 +110,8 @@ export class MainPage implements OnInit {
     this.router.navigateByUrl("/detail/42");
   }
 
+  tutorial(){
+    this.router.navigateByUrl("/tutorial");
+  }
+
 }

@@ -204,7 +204,7 @@ export class DetailPage implements OnInit {
     });
   }
 
-  //Caundo el dispositivo de desconecta, se actualiza el estado y se muestra un mensaje
+  //Cuando el dispositivo de desconecta, se actualiza el estado y se muestra un mensaje
   async onDeviceDisconnected(peripheral) {
     console.log('no conectado')
     this.setStatus('Dispositivo desconectado');
@@ -285,6 +285,16 @@ export class DetailPage implements OnInit {
     }
   }
 
+  notificarall(){
+    let charact = this.peripheral.characteristics
+    charact.forEach(element => {
+      console.log(element)
+      this.notificar(this.peripheral.id, element.service, element.characteristic)
+    });
+
+    
+  }
+
   //Actualiza el valor mostrado en pantalla del estado del paciente
   mostrarestado(data){
     var estado = String.fromCharCode.apply(null, Array.from(new Uint8Array(data)));
@@ -330,7 +340,7 @@ export class DetailPage implements OnInit {
     this.enviando = false;
     this.data = [] ;
 
-    this.awsProvider.uploadtoplatform(' ', 1, this.peripheral.id).subscribe( 
+    this.awsProvider.uploadtoplatform('Estado: ' + this.estado + '\n Temperatura: ' + this.temp, 1, this.peripheral.id).subscribe( 
       (resp) => {
         console.log(resp)
         var thenum = resp.replace( /^\D+/g, '');
